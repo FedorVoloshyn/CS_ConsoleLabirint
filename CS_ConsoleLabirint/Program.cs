@@ -7,6 +7,8 @@ namespace CS_ConsoleLabirint
     {
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
             bool exit = false;
             Console.WindowHeight = 40;
 

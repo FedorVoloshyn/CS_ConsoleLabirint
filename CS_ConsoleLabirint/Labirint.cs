@@ -64,7 +64,8 @@ namespace CS_ConsoleLabirint
                 for (int j = 0; j < width; j++)
                     switch (maze[i, j])
                     {
-                        case wall: currentLabirint += "\u2551 "; break;
+                        case wall: currentLabirint += getUnicodeFrameSymbol(i, j, height, width) + ' ';
+                            break;
                         case pass: currentLabirint += "  "; break;
                         case hero: currentLabirint += "X "; break;
                     }
@@ -74,6 +75,51 @@ namespace CS_ConsoleLabirint
 
 
             return currentLabirint;
+        }
+
+        private string getUnicodeFrameSymbol(int i, int j, int height, int width)
+        {//Функцию следует использовать только в том случае, если maze[i, j] является wall
+            string frameSymbol = "e";
+            bool dirUp, dirRight, dirDown, dirLeft;
+            dirUp = dirRight = dirDown = dirLeft = false;
+
+            if (i > 0)
+                if(maze[i - 1, j] == wall)
+                dirUp = true;
+            if (j < width - 1)
+                if (maze[i, j + 1] == wall)
+                dirRight = true;
+            if (i < height -1)
+                if (maze[i + 1, j] == wall)
+                dirDown = true;
+            if (j > 0)
+                if (maze[i, j - 1] == wall)
+                dirLeft = true;
+
+            if (dirLeft || dirRight)
+                frameSymbol = "\u2550";
+            if (dirUp || dirDown)
+                frameSymbol = "\u2551";
+            if (dirLeft && dirDown)
+                frameSymbol = "\u2557";
+            if (dirUp && dirLeft)
+                frameSymbol = "\u255D";
+            if (dirUp && dirRight)
+                frameSymbol = "\u255A";
+            if (dirDown && dirRight)
+                frameSymbol = "\u2554";
+            if (dirLeft && dirRight && dirDown)
+                frameSymbol = "\u2566";
+            if (dirLeft && dirRight && dirUp)
+                frameSymbol = "\u2569";
+            if (dirUp && dirDown && dirRight)
+                frameSymbol = "\u2560";
+            if (dirUp && dirDown && dirLeft)
+                frameSymbol = "\u2563";
+            if (dirLeft && dirRight && dirUp && dirDown)
+                frameSymbol = "\u256C";
+
+            return frameSymbol;
         }
 
         public void makeStep(Direction heroDirection)
