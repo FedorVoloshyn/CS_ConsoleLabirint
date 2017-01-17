@@ -5,10 +5,11 @@ namespace CS_ConsoleLabirint
 {
     class Labirint
     {
-        const int wall = 0, pass = 1, hero = 2;
+        const int wall = 0, pass = 1, hero = 2, exit = 3;
         int[,] maze;
         private int heroX;
         private int heroY;
+        public bool LevelDone { get; private set; }
 
         public Labirint(int height, int width)
         {
@@ -50,13 +51,10 @@ namespace CS_ConsoleLabirint
             }
             else a += 1;
 
-            if (a == 4)
-                return true;
-            else
-                return false;
+            return a == 4;
         }
 
-        public string visual(int height, int width) // Изображение результата с помощью консольной графики
+        public string Visual(int height, int width) // Изображение результата с помощью консольной графики
         {
             string currentLabirint = "";
             for (int i = 0; i < height; i++)
@@ -64,25 +62,72 @@ namespace CS_ConsoleLabirint
                 for (int j = 0; j < width; j++)
                     switch (maze[i, j])
                     {
-                        case wall: currentLabirint += "\u2551 "; break;
+                        case wall: currentLabirint += getUnicodeFrameSymbol(i, j, height, width) + ' ';
+                            break;
                         case pass: currentLabirint += "  "; break;
                         case hero: currentLabirint += "X "; break;
+                        case exit: currentLabirint += "+ "; break;
                     }
                 currentLabirint += "\n";
             }
             currentLabirint += "\n";
-
-
+            
             return currentLabirint;
         }
 
-        public void makeStep(Direction heroDirection)
+        private string getUnicodeFrameSymbol(int i, int j, int height, int width)
+        {//Функцию следует использовать только в том случае, если maze[i, j] является wall
+            string frameSymbol = "e";
+            bool dirUp, dirRight, dirDown, dirLeft;
+            dirUp = dirRight = dirDown = dirLeft = false;
+
+            if (i > 0)
+                if(maze[i - 1, j] == wall)
+                dirUp = true;
+            if (j < width - 1)
+                if (maze[i, j + 1] == wall)
+                dirRight = true;
+            if (i < height -1)
+                if (maze[i + 1, j] == wall)
+                dirDown = true;
+            if (j > 0)
+                if (maze[i, j - 1] == wall)
+                dirLeft = true;
+
+            if (dirLeft || dirRight)
+                frameSymbol = "\u2550";
+            if (dirUp || dirDown)
+                frameSymbol = "\u2551";
+            if (dirLeft && dirDown)
+                frameSymbol = "\u2557";
+            if (dirUp && dirLeft)
+                frameSymbol = "\u255D";
+            if (dirUp && dirRight)
+                frameSymbol = "\u255A";
+            if (dirDown && dirRight)
+                frameSymbol = "\u2554";
+            if (dirLeft && dirRight && dirDown)
+                frameSymbol = "\u2566";
+            if (dirLeft && dirRight && dirUp)
+                frameSymbol = "\u2569";
+            if (dirUp && dirDown && dirRight)
+                frameSymbol = "\u2560";
+            if (dirUp && dirDown && dirLeft)
+                frameSymbol = "\u2563";
+            if (dirLeft && dirRight && dirUp && dirDown)
+                frameSymbol = "\u256C";
+
+            return frameSymbol;
+        }
+
+        public void MakeStep(Direction heroDirection)
         {
             switch (heroDirection)
             {
                 case Direction.up:
                     if (maze[heroX - 1, heroY] != wall)
                     {
+                        if (maze[heroX - 1, heroY] == exit) LevelDone = true;
                         Swap(ref maze[heroX - 1, heroY], ref maze[heroX, heroY]);
                         heroX--;
                     }
@@ -90,6 +135,7 @@ namespace CS_ConsoleLabirint
                 case Direction.right:
                     if (maze[heroX, heroY + 1] != wall)
                     {
+                        if (maze[heroX, heroY + 1] == exit) LevelDone = true;
                         Swap(ref maze[heroX, heroY + 1], ref maze[heroX, heroY]);
                         heroY++;
                     }
@@ -97,6 +143,7 @@ namespace CS_ConsoleLabirint
                 case Direction.down:
                     if (maze[heroX + 1, heroY] != wall)
                     {
+                        if (maze[heroX + 1, heroY] == exit) LevelDone = true;
                         Swap(ref maze[heroX + 1, heroY], ref maze[heroX, heroY]);
                         heroX++;
                     }
@@ -104,6 +151,7 @@ namespace CS_ConsoleLabirint
                 case Direction.left:
                     if (maze[heroX, heroY - 1] != wall)
                     {
+                        if (maze[heroX, heroY - 1] == exit) LevelDone = true;
                         Swap(ref maze[heroX, heroY - 1], ref maze[heroX, heroY]);
                         heroY--;
                     }
@@ -123,7 +171,7 @@ namespace CS_ConsoleLabirint
         void mazemake(int height, int width) // Собственно алгоритм
         {
             int x, y, c, a;
-            bool b;
+            LevelDone = false;
             Random rand = new Random();
 
             for (int i = 0; i < height; i++) // Массив заполняется землей-ноликами
@@ -192,6 +240,8 @@ namespace CS_ConsoleLabirint
             } // На этом и все.
             // Задаю начальную точку для героя
             maze[heroX, heroY] = 2;
+            // и точку выхода
+            maze[height - 2, width - 2] = 3;
             //================================
         }
     }
