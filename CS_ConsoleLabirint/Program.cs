@@ -7,36 +7,37 @@ namespace CS_ConsoleLabirint
     {
         static void Main(string[] args)
         {
-            bool exit = false;
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            
+            int size = 5, level = 1;
             Console.WindowHeight = 40;
 
-            Console.WriteLine("Enter length: ");
-            int height = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Enter width: ");
-            int width = Int32.Parse(Console.ReadLine());
-
-            Console.Clear();
-
-            Labirint labirint = new Labirint(height, width);
-            Direction currentDirrection = Direction.noDirrection;
-
-            while (!exit)
+            while (size < 33)
             {
-                labirint.makeStep(currentDirrection);
-                Console.Write(labirint.visual(height, width) + "\n Esc to exit.");
-                ConsoleKey pressedButton = Console.ReadKey().Key;
-                switch(pressedButton)
-                {
-                    case ConsoleKey.Escape:
-                        exit = true;
-                        break;
-                    default:
-                        currentDirrection = Controls.GetDirection(pressedButton);
-                        break;
-                }
-                Console.Clear();
-            }
+                Labirint labirint = new Labirint(size, size);
+                Direction currentDirrection = Direction.noDirrection;
 
+                while (!labirint.LevelDone)
+                {
+                    Console.WriteLine("Level " + level + ". Find a way to the right buttom corner!\n");
+
+                    labirint.MakeStep(currentDirrection);
+                    Console.Write(labirint.Visual(size, size) + "\n Esc to exit.");
+                    ConsoleKey pressedButton = Console.ReadKey().Key;
+                    switch (pressedButton)
+                    {
+                        case ConsoleKey.Escape:
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            currentDirrection = Controls.GetDirection(pressedButton);
+                            break;
+                    }
+                    Console.Clear();
+                } 
+                size += 2;
+                level++;
+            }
         }
     }
 }
