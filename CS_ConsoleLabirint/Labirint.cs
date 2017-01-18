@@ -62,7 +62,7 @@ namespace CS_ConsoleLabirint
                 for (int j = 0; j < width; j++)
                     switch (maze[i, j])
                     {
-                        case wall: currentLabirint += getUnicodeFrameSymbol(i, j, height, width) + ' ';
+                        case wall: currentLabirint += getUnicodeFrameSymbol(i, j, height, width);
                             break;
                         case pass: currentLabirint += "  "; break;
                         case hero: currentLabirint += "X "; break;
@@ -76,9 +76,9 @@ namespace CS_ConsoleLabirint
         }
 
         private string getUnicodeFrameSymbol(int i, int j, int height, int width)
-        {//Функцию следует использовать только в том случае, если maze[i, j] является wall
-            string frameSymbol = "e";
-            bool dirUp, dirRight, dirDown, dirLeft;
+        {  //Функцию следует использовать только в том случае, если maze[i, j] является wall
+            string frameSymbol = "e"; // обозначает ошибочный блок, которому не присвоилось правильного значения. отладочная печать
+            bool dirUp, dirRight, dirDown, dirLeft; // направления
             dirUp = dirRight = dirDown = dirLeft = false;
 
             if (i > 0)
@@ -94,6 +94,7 @@ namespace CS_ConsoleLabirint
                 if (maze[i, j - 1] == wall)
                 dirLeft = true;
 
+            // Формирование символа на основе того, какие блоки-соседи у текущего
             if (dirLeft || dirRight)
                 frameSymbol = "\u2550";
             if (dirUp || dirDown)
@@ -116,6 +117,14 @@ namespace CS_ConsoleLabirint
                 frameSymbol = "\u2563";
             if (dirLeft && dirRight && dirUp && dirDown)
                 frameSymbol = "\u256C";
+
+            if (j < width - 1)
+            {
+                if (maze[i, j + 1] == wall)
+                    frameSymbol += '\u2550';
+                else
+                    frameSymbol += ' ';
+            }
 
             return frameSymbol;
         }

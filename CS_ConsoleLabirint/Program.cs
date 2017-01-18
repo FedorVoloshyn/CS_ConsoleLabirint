@@ -12,7 +12,7 @@ namespace CS_ConsoleLabirint
             int size = 5, level = 1;
             Console.WindowHeight = 40;
 
-            while (size < 33)
+            while (size < 41)
             {
                 Labirint labirint = new Labirint(size, size);
                 Direction currentDirrection = Direction.noDirrection;
