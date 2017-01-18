@@ -11,7 +11,7 @@ namespace CS_ConsoleLabirint
         private int heroY;
         private int height;
         private int width;
-        public bool LevelDone { get; private set; }
+        public bool LevelDone { get; set; }
 
         public Labirint(int height, int width)
         {

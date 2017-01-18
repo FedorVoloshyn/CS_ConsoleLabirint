@@ -6,35 +6,60 @@ namespace CS_ConsoleLabirint
     class Program
     {
         static void Main(string[] args)
-        {            
-            int size = 5, level = 1;
-            Console.WindowHeight = 40;
+        {
+            Console.WindowHeight = 42;
+            Console.CursorVisible = false;
+            int height = 5, width = 5, level = 1;
+            bool gameOn = true;
 
-            while (size < 41)
+            while (gameOn == true)
             {
-                Labirint labirint = new Labirint(size, size);
-                Direction currentDirrection = Direction.noDirrection;
+                Console.WriteLine("\tWelcome to my Console Labirint!\nPress any button to start a game.");
+                Console.ReadKey();
+                Console.Clear();
 
-                while (!labirint.LevelDone)
+                var timer = System.Diagnostics.Stopwatch.StartNew();
+
+                while (width < 61)
                 {
-                    Console.WriteLine("Level " + level + ". Find a way to the right buttom corner!\n");
+                    Labirint labirint = new Labirint(height, width);
+                    Direction currentDirrection = Direction.noDirrection;
 
-                    labirint.MakeStep(currentDirrection);
-                    Console.Write(labirint.GetLabirintStringPresentation() + "\n Esc to exit.");
-                    ConsoleKey pressedButton = Console.ReadKey().Key;
-                    switch (pressedButton)
+                    while (!labirint.LevelDone)
                     {
-                        case ConsoleKey.Escape:
-                            Environment.Exit(0);
-                            break;
-                        default:
-                            currentDirrection = Controls.GetDirection(pressedButton);
-                            break;
+                        Console.WriteLine("Level " + level + ". Find a way to the right buttom corner!\n");
+
+                        labirint.MakeStep(currentDirrection);
+                        Console.Write(labirint.GetLabirintStringPresentation() + "\n 'Esc' to exit.");
+                        ConsoleKey pressedButton = Console.ReadKey().Key;
+                        switch (pressedButton)
+                        {
+                            case ConsoleKey.Escape:
+                                Environment.Exit(0);
+                                break;
+
+                            case ConsoleKey.F12:
+                                labirint.LevelDone = true;
+                                break;
+
+                            default:
+                                currentDirrection = Controls.GetDirection(pressedButton);
+                                break;
+                        }
+                        Console.Clear();
                     }
-                    Console.Clear();
-                } 
-                size += 2;
-                level++;
+                    if (height < 37)
+                        height += 2;
+                    width += 2;
+                    level++;
+                }
+
+                timer.Stop();
+                var elapsedMs = timer.ElapsedMilliseconds;
+
+                Console.WriteLine("\tYou made it!\n Your time: {0} seconds.\n\n Press any button to play again or 'Esc' to exit.\n", Convert.ToDouble(timer.ElapsedMilliseconds / 1000.0));
+                if (Console.ReadKey().Key == ConsoleKey.Escape)
+                    gameOn = false;
             }
         }
     }
