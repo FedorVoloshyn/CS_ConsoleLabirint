@@ -14,6 +14,7 @@ namespace CS_ConsoleLabirint
 
             while (gameOn == true)
             {
+                Console.Clear();
                 Console.WriteLine("\tWelcome to my Console Labirint!\nPress any button to start a game.");
                 Console.ReadKey();
                 Console.Clear();
