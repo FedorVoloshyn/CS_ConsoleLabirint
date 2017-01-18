@@ -20,10 +20,10 @@ namespace CS_ConsoleLabirint
             this.height = height;
             this.width = width;
             this.maze = new int[this.height, this.width];
-            mazemake();
+            Mazemake();
         }
 
-        bool deadend(int x, int y, int[,] maze) // Вспомогательная функция, определяет тупики
+        bool Deadend(int x, int y, int[,] maze) // Вспомогательная функция, определяет тупики
         {
             int a = 0;
 
@@ -58,13 +58,13 @@ namespace CS_ConsoleLabirint
             return a == 4;
         }
 
-        public string Visual() // Изображение результата с помощью консольной графики
+        public string GetLabirintStringPresentation() // Изображение результата с помощью консольной графики
         {
             string currentLabirint = "";
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
-                    currentLabirint += getCurrentElementSymbol(i, j);
+                    currentLabirint += GetCurrentElementSymbol(i, j);
                 currentLabirint += "\n";
             }
             currentLabirint += "\n";
@@ -72,49 +72,50 @@ namespace CS_ConsoleLabirint
             return currentLabirint;
         }
 
-        private string getCurrentElementSymbol(int i, int j)
-        {  //Функцию следует использовать только в том случае, если maze[i, j] является wall
+        private string GetCurrentElementSymbol(int i, int j) 
+        { // Функция определяет текущий элемент и возвращает соответствующий ему символ
+            // string потому что кроме самого символа вместе с ним идет разделить: пробел либо стенка
             string frameSymbol = "";
             if (maze[i, j] == wall)
             {
-                bool dirUp, dirRight, dirDown, dirLeft; // направления
-                dirUp = dirRight = dirDown = dirLeft = false;
+                bool wallUp, wallRight, wallDown, wallLeft; // Булевы значения наличия стены сверху, справа, снизу, слева
+                wallUp = wallRight = wallDown = wallLeft = false;
 
                 if (i > 0)
                     if (maze[i - 1, j] == wall)
-                        dirUp = true;
+                        wallUp = true;
                 if (j < width - 1)
                     if (maze[i, j + 1] == wall)
-                        dirRight = true;
+                        wallRight = true;
                 if (i < height - 1)
                     if (maze[i + 1, j] == wall)
-                        dirDown = true;
+                        wallDown = true;
                 if (j > 0)
                     if (maze[i, j - 1] == wall)
-                        dirLeft = true;
+                        wallLeft = true;
 
-                // Формирование символа на основе того, какие блоки-соседи у текущего
-                if (dirLeft || dirRight)
+                // Формирование символа стены на основе соседних стен
+                if (wallLeft || wallRight)
                     frameSymbol = "\u2550";
-                if (dirUp || dirDown)
+                if (wallUp || wallDown)
                     frameSymbol = "\u2551";
-                if (dirLeft && dirDown)
+                if (wallLeft && wallDown)
                     frameSymbol = "\u2557";
-                if (dirUp && dirLeft)
+                if (wallUp && wallLeft)
                     frameSymbol = "\u255D";
-                if (dirUp && dirRight)
+                if (wallUp && wallRight)
                     frameSymbol = "\u255A";
-                if (dirDown && dirRight)
+                if (wallDown && wallRight)
                     frameSymbol = "\u2554";
-                if (dirLeft && dirRight && dirDown)
+                if (wallLeft && wallRight && wallDown)
                     frameSymbol = "\u2566";
-                if (dirLeft && dirRight && dirUp)
+                if (wallLeft && wallRight && wallUp)
                     frameSymbol = "\u2569";
-                if (dirUp && dirDown && dirRight)
+                if (wallUp && wallDown && wallRight)
                     frameSymbol = "\u2560";
-                if (dirUp && dirDown && dirLeft)
+                if (wallUp && wallDown && wallLeft)
                     frameSymbol = "\u2563";
-                if (dirLeft && dirRight && dirUp && dirDown)
+                if (wallLeft && wallRight && wallUp && wallDown)
                     frameSymbol = "\u256C";
 
                 //Добавление блока для выравнивания по ширине (фикс пунктирных горизонтальных стен)
@@ -185,7 +186,7 @@ namespace CS_ConsoleLabirint
             rhs = temp;
         }
 
-        void mazemake() // Собственно алгоритм
+        void Mazemake() // Собственно алгоритм
         {
             int x, y, c, a;
             LevelDone = false;
@@ -241,11 +242,11 @@ namespace CS_ConsoleLabirint
                                 }
                             break;
                     }
-                    if (deadend(x, y, maze))
+                    if (Deadend(x, y, maze))
                         break;
                 }
 
-                if (deadend(x, y, maze)) // Вытаскиваем крота из тупика
+                if (Deadend(x, y, maze)) // Вытаскиваем крота из тупика
                     do
                     {
                         x = 2 * (rand.Next() % ((width - 1) / 2)) + 1;
