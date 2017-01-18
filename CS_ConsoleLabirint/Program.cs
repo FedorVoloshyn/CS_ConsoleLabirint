@@ -9,11 +9,14 @@ namespace CS_ConsoleLabirint
         {
             Console.WindowHeight = 42;
             Console.CursorVisible = false;
-            int height = 5, width = 5, level = 1;
+            int height, width, level;
             bool gameOn = true;
 
             while (gameOn == true)
             {
+                height = 5;
+                width = 5;
+                level = 1;
                 Console.Clear();
                 Console.WriteLine("\tWelcome to my Console Labirint!\nPress any button to start a game.");
                 Console.ReadKey();
