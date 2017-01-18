@@ -34,7 +34,7 @@ namespace CS_ConsoleLabirint
                         Console.WriteLine("Level " + level + ". Find a way to the right buttom corner!\n");
 
                         labirint.MakeStep(currentDirrection);
-                        Console.Write(labirint.GetLabirintStringPresentation() + "\n 'Esc' to exit.");
+                        Console.Write(labirint.GetLabirintStringPresentation() + "'Esc' to exit.");
                         ConsoleKey pressedButton = Console.ReadKey().Key;
                         switch (pressedButton)
                         {
