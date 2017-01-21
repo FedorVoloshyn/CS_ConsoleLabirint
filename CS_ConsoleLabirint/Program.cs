@@ -61,7 +61,7 @@ namespace CS_ConsoleLabirint
                 timer.Stop();
                 var elapsedMs = timer.ElapsedMilliseconds;
 
-                Console.WriteLine("\tYou made it!\n Your time: {0} seconds.\n\n Press any button to play again or 'Esc' to exit.\n", Convert.ToDateTime(timer.ElapsedMilliseconds));
+                Console.WriteLine("\tYou made it!\n Your time: {0} seconds.\n\n Press any button to play again or 'Esc' to exit.\n", Convert.ToDouble(timer.ElapsedMilliseconds / 1000.0));
                 if (Console.ReadKey().Key == ConsoleKey.Escape)
                     isGameOn = false;
             }
