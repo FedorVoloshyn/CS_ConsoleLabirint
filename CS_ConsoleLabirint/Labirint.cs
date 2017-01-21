@@ -5,13 +5,16 @@ namespace CS_ConsoleLabirint
 {
     class Labirint
     {
-        const int wall = 0, pass = 1, hero = 2, exit = 3;
-        private int[,] maze;
+        private const int wall = 0, pass = 1, hero = 2, exit = 3;
+        private int[,] labirint;
         private int heroX;
         private int heroY;
         private int height;
         private int width;
-        public bool LevelDone { get; set; }
+
+        public int Height { get { return height; } }
+        public int Width { get { return width; } }
+        public bool IsLevelDone { get; set; }
 
         public Labirint(int height, int width)
         {
@@ -19,38 +22,44 @@ namespace CS_ConsoleLabirint
             this.heroY = 1;
             this.height = height;
             this.width = width;
-            this.maze = new int[this.height, this.width];
+            this.labirint = new int[this.height, this.width];
+
+            // Initialize labirint with only walls
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width; j++)
+                    labirint[i, j] = wall;
+
             Mazemake();
         }
 
-        bool Deadend(int x, int y, int[,] maze) // Вспомогательная функция, определяет тупики
+        private bool IsDeadend(int x, int y) // Additional function that determinates deadends
         {
             int a = 0;
 
             if (x != 1)
             {
-                if (maze[y, x - 2] == pass)
+                if (labirint[y, x - 2] == pass)
                     a += 1;
             }
             else a += 1;
 
             if (y != 1)
             {
-                if (maze[y - 2, x] == pass)
+                if (labirint[y - 2, x] == pass)
                     a += 1;
             }
             else a += 1;
 
             if (x != width - 2)
             {
-                if (maze[y, x + 2] == pass)
+                if (labirint[y, x + 2] == pass)
                     a += 1;
             }
             else a += 1;
 
             if (y != height - 2)
             {
-                if (maze[y + 2, x] == pass)
+                if (labirint[y + 2, x] == pass)
                     a += 1;
             }
             else a += 1;
@@ -73,69 +82,69 @@ namespace CS_ConsoleLabirint
         }
 
         private string GetCurrentElementSymbol(int i, int j) 
-        { // Функция определяет текущий элемент и возвращает соответствующий ему символ
-            // string потому что кроме самого символа вместе с ним идет разделить: пробел либо стенка
-            string frameSymbol = "";
-            if (maze[i, j] == wall)
+        { // Function defines what is curent labirint[i, j] (wall, pass, hero or exit)
+            // I used string because 
+            string labirintSymbol = "";
+            if (labirint[i, j] == wall)
             {
                 bool wallUp, wallRight, wallDown, wallLeft; // Булевы значения наличия стены сверху, справа, снизу, слева
                 wallUp = wallRight = wallDown = wallLeft = false;
 
                 if (i > 0)
-                    if (maze[i - 1, j] == wall)
+                    if (labirint[i - 1, j] == wall)
                         wallUp = true;
                 if (j < width - 1)
-                    if (maze[i, j + 1] == wall)
+                    if (labirint[i, j + 1] == wall)
                         wallRight = true;
                 if (i < height - 1)
-                    if (maze[i + 1, j] == wall)
+                    if (labirint[i + 1, j] == wall)
                         wallDown = true;
                 if (j > 0)
-                    if (maze[i, j - 1] == wall)
+                    if (labirint[i, j - 1] == wall)
                         wallLeft = true;
 
-                // Формирование символа стены на основе соседних стен
+                // Generete wall symbol assuming walls which are adjacent to the current
                 if (wallLeft || wallRight)
-                    frameSymbol = "\u2550";
+                    labirintSymbol = "═";
                 if (wallUp || wallDown)
-                    frameSymbol = "\u2551";
+                    labirintSymbol = "║";
                 if (wallLeft && wallDown)
-                    frameSymbol = "\u2557";
+                    labirintSymbol = "╗";
                 if (wallUp && wallLeft)
-                    frameSymbol = "\u255D";
+                    labirintSymbol = "╝";
                 if (wallUp && wallRight)
-                    frameSymbol = "\u255A";
+                    labirintSymbol = "╚";
                 if (wallDown && wallRight)
-                    frameSymbol = "\u2554";
+                    labirintSymbol = "╔";
                 if (wallLeft && wallRight && wallDown)
-                    frameSymbol = "\u2566";
+                    labirintSymbol = "╦";
                 if (wallLeft && wallRight && wallUp)
-                    frameSymbol = "\u2569";
+                    labirintSymbol = "╩";
                 if (wallUp && wallDown && wallRight)
-                    frameSymbol = "\u2560";
+                    labirintSymbol = "╠";
                 if (wallUp && wallDown && wallLeft)
-                    frameSymbol = "\u2563";
+                    labirintSymbol = "╣";
                 if (wallLeft && wallRight && wallUp && wallDown)
-                    frameSymbol = "\u256C";
+                    labirintSymbol = "╬";
 
-                //Добавление блока для выравнивания по ширине (фикс пунктирных горизонтальных стен)
+                // Add space or '═' to current element to fix dotet (= = = =) view of horisontal wall
                 if (j < width - 1)
                 {
-                    if (maze[i, j + 1] == wall)
-                        frameSymbol += '\u2550';
+                    if (labirint[i, j + 1] == wall)
+                        labirintSymbol += '═';
                     else
-                        frameSymbol += ' ';
+                        labirintSymbol += ' ';
                 }
             }
             else
-                switch(maze[i, j])
+                switch(labirint[i, j])
                 {
-                    case pass: frameSymbol += "  "; break;
-                    case hero: frameSymbol += "X "; break;
-                    case exit: frameSymbol += "+ "; break;
+                    case pass: labirintSymbol += "  "; break;
+                    case hero: labirintSymbol += "X "; break;
+                    case exit: labirintSymbol += "+ "; break;
                 }
 
-            return frameSymbol;
+            return labirintSymbol;
         }
 
         public void MakeStep(Direction heroDirection)
@@ -143,34 +152,38 @@ namespace CS_ConsoleLabirint
             switch (heroDirection)
             {
                 case Direction.up:
-                    if (maze[heroX - 1, heroY] != wall)
+                    if (labirint[heroX - 1, heroY] != wall)
                     {
-                        if (maze[heroX - 1, heroY] == exit) LevelDone = true;
-                        Swap(ref maze[heroX - 1, heroY], ref maze[heroX, heroY]);
+                        if (labirint[heroX - 1, heroY] == exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroX - 1, heroY], ref labirint[heroX, heroY]);
                         heroX--;
                     }
                     break;
                 case Direction.right:
-                    if (maze[heroX, heroY + 1] != wall)
+                    if (labirint[heroX, heroY + 1] != wall)
                     {
-                        if (maze[heroX, heroY + 1] == exit) LevelDone = true;
-                        Swap(ref maze[heroX, heroY + 1], ref maze[heroX, heroY]);
+                        if (labirint[heroX, heroY + 1] == exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroX, heroY + 1], ref labirint[heroX, heroY]);
                         heroY++;
                     }
                     break;
                 case Direction.down:
-                    if (maze[heroX + 1, heroY] != wall)
+                    if (labirint[heroX + 1, heroY] != wall)
                     {
-                        if (maze[heroX + 1, heroY] == exit) LevelDone = true;
-                        Swap(ref maze[heroX + 1, heroY], ref maze[heroX, heroY]);
+                        if (labirint[heroX + 1, heroY] == exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroX + 1, heroY], ref labirint[heroX, heroY]);
                         heroX++;
                     }
                     break;
                 case Direction.left:
-                    if (maze[heroX, heroY - 1] != wall)
+                    if (labirint[heroX, heroY - 1] != wall)
                     {
-                        if (maze[heroX, heroY - 1] == exit) LevelDone = true;
-                        Swap(ref maze[heroX, heroY - 1], ref maze[heroX, heroY]);
+                        if (labirint[heroX, heroY - 1] == exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroX, heroY - 1], ref labirint[heroX, heroY]);
                         heroY--;
                     }
                     break;
@@ -179,87 +192,91 @@ namespace CS_ConsoleLabirint
             }
         }
 
-        private void Swap(ref int lhs, ref int rhs)
+        private void Swap(ref int firstValue, ref int secondValue)
         {
-            int temp = lhs;
-            lhs = rhs;
-            rhs = temp;
+            int temp = firstValue;
+            firstValue = secondValue;
+            secondValue = temp;
         }
 
-        void Mazemake() // Собственно алгоритм
+        private void Mazemake() // Labirint generation
         {
             int x, y, c, a;
-            LevelDone = false;
+            IsLevelDone = false;
             Random rand = new Random();
 
-            for (int i = 0; i < height; i++) // Массив заполняется землей-ноликами
+            for (int i = 0; i < height; i++)
                 for (int j = 0; j < width; j++)
-                    maze[i, j] = wall;
+                    labirint[i, j] = wall;
 
-            x = 3; y = 3; a = 0; // Точка приземления крота и счетчик
+            x = 3;
+            y = 3; 
+            a = 0; 
+
             while (a < 10000)
-            { // Да, простите, костыль, иначе есть как, но лень
-                maze[y, x] = pass; a++;
+            { 
+                labirint[y, x] = pass;
+                a++;
                 while (true)
-                { // Бесконечный цикл, который прерывается только тупиком
-                    c = rand.Next() % 4; // Напоминаю, что крот прорывает
+                { 
+                    c = rand.Next() % 4; 
                     switch (c)
-                    {  // по две клетки в одном направлении за прыжок
+                    {  
                         case 0:
                             if (y != 1)
-                                if (maze[y - 2, x] == wall)
-                                { // Вверх
-                                    maze[y - 1, x] = pass;
-                                    maze[y - 2, x] = pass;
+                                if (labirint[y - 2, x] == wall)
+                                { 
+                                    labirint[y - 1, x] = pass;
+                                    labirint[y - 2, x] = pass;
                                     y -= 2;
                                 }
                             break;
                         case 1:
                             if (y != height - 2)
-                                if (maze[y + 2, x] == wall)
-                                { // Вниз
-                                    maze[y + 1, x] = pass;
-                                    maze[y + 2, x] = pass;
+                                if (labirint[y + 2, x] == wall)
+                                { 
+                                    labirint[y + 1, x] = pass;
+                                    labirint[y + 2, x] = pass;
                                     y += 2;
                                 }
                             break;
                         case 2:
                             if (x != 1)
-                                if (maze[y, x - 2] == wall)
-                                { // Налево
-                                    maze[y, x - 1] = pass;
-                                    maze[y, x - 2] = pass;
+                                if (labirint[y, x - 2] == wall)
+                                { 
+                                    labirint[y, x - 1] = pass;
+                                    labirint[y, x - 2] = pass;
                                     x -= 2;
                                 }
                             break;
                         case 3:
                             if (x != width - 2)
-                                if (maze[y, x + 2] == wall)
-                                { // Направо
-                                    maze[y, x + 1] = pass;
-                                    maze[y, x + 2] = pass;
+                                if (labirint[y, x + 2] == wall)
+                                {
+                                    labirint[y, x + 1] = pass;
+                                    labirint[y, x + 2] = pass;
                                     x += 2;
                                 }
                             break;
                     }
-                    if (Deadend(x, y, maze))
+                    if (IsDeadend(x, y))
                         break;
                 }
 
-                if (Deadend(x, y, maze)) // Вытаскиваем крота из тупика
+                if (IsDeadend(x, y)) 
                     do
                     {
                         x = 2 * (rand.Next() % ((width - 1) / 2)) + 1;
                         y = 2 * (rand.Next() % ((height - 1) / 2)) + 1;
                     }
-                    while (maze[y, x] != pass);
+                    while (labirint[y, x] != pass);
 
 
-            } // На этом и все.
-            // Задаю начальную точку для героя
-            maze[heroX, heroY] = 2;
-            // и точку выхода
-            maze[height - 2, width - 2] = 3;
+            }
+            // Hero's start point
+            labirint[heroX, heroY] = 2;
+            // Exit point
+            labirint[height - 2, width - 2] = 3;
             //================================
         }
     }
