@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleVisualiser.cs" />
     <Compile Include="Controls.cs" />
     <Compile Include="Enums\Directions.cs" />
+    <Compile Include="Enums\LabirintElements.cs" />
     <Compile Include="Labirint.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -18,7 +18,7 @@ namespace CS_ConsoleLabirint
                 labirintWidth = 5;
                 level = 1;
                 Console.Clear();
-                Console.WriteLine("\tWelcome to my Console Labirint!\n Press any button to start a game.");
+                Console.WriteLine("\tWelcome to my Console Labirint!\n Press any button to start a game.\n Use arrows to move hero (X).");
                 Console.ReadKey();
                 Console.Clear();
 
@@ -34,7 +34,7 @@ namespace CS_ConsoleLabirint
                         Console.WriteLine("Level " + level + ". Find a way to the right buttom corner!\n");
 
                         labirint.MakeStep(currentDirrection);
-                        Console.Write(labirint.GetLabirintStringPresentation() + "'Esc' to exit.");
+                        Console.Write(ConsoleVisualiser.GetLabirintStringPresentation(labirint) + "'Esc' to exit.");
                         ConsoleKey pressedButton = Console.ReadKey().Key;
                         switch (pressedButton)
                         {
@@ -61,7 +61,7 @@ namespace CS_ConsoleLabirint
                 timer.Stop();
                 var elapsedMs = timer.ElapsedMilliseconds;
 
-                Console.WriteLine("\tYou made it!\n Your time: {0} seconds.\n\n Press any button to play again or 'Esc' to exit.\n", Convert.ToDouble(timer.ElapsedMilliseconds / 1000.0));
+                Console.WriteLine("\tYou made it!\n Your time: {0} seconds.\n\n Press any button to play again or 'Esc' to exit.\n", Convert.ToDateTime(timer.ElapsedMilliseconds));
                 if (Console.ReadKey().Key == ConsoleKey.Escape)
                     isGameOn = false;
             }
