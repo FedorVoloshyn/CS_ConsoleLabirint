@@ -1,11 +1,53 @@
 ﻿using System;
-using CS_ConsoleLabirint.Enums;
+using LabyrinthModel;
+using LabyrinthModel.Enums;
+using LabyrinthModel.Interfaces;
 
 namespace CS_ConsoleLabirint
 {
-    static class ConsoleVisualiser
+    class ConsoleVisualiser : ILabyrinthView
     {
-        public static string GetLabirintStringPresentation(Labirint labirint) // Visualize labirint using console graphics
+        public event EventHandler<ButtonEventArgs> ButtonPressed;
+
+        public ConsoleVisualiser()
+        {
+            Console.WindowHeight = 42;
+            Console.CursorVisible = false;
+        }
+
+        public KeyboardGameControls GetDirection()
+        {
+            var readenKey = Console.ReadKey().Key;
+            switch (readenKey)
+            {
+                case ConsoleKey.UpArrow:
+                    return KeyboardGameControls.Up;
+                case ConsoleKey.RightArrow:
+                    return KeyboardGameControls.Right;
+                case ConsoleKey.DownArrow:
+                    return KeyboardGameControls.Down;
+                case ConsoleKey.LeftArrow:
+                    return KeyboardGameControls.Left;
+                case ConsoleKey.Escape:
+                    return KeyboardGameControls.Quit;
+                case ConsoleKey.F12:
+                    return KeyboardGameControls.F12;
+                default:
+                    return KeyboardGameControls.NoDirrection;
+            }
+        }
+
+        public void ClearCanvas()
+        {
+            Console.Clear();
+        }
+
+        public void PrintMessage(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        public void PrintLabyrinth(Labyrinth labirint) // Visualize labirint using console graphics
         {
             string currentLabirint = "";
 
@@ -17,10 +59,10 @@ namespace CS_ConsoleLabirint
             }
             currentLabirint += "\n";
 
-            return currentLabirint;
+            Console.Write(currentLabirint);
         }
 
-        private static string GetCurrentElementSymbol(int i, int j, Labirint labirint) // Function defines what is curent labirint[i, j] element (wall, pass, hero or exit)
+        private string GetCurrentElementSymbol(int i, int j, Labyrinth labirint) // Function defines what is curent labirint[i, j] element (wall, pass, hero or exit)
         { 
             // I used string because space ' ' or '=' adds after generating symbol
             string labirintSymbol = "";

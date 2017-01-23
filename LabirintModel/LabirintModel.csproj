@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{349F518E-C1E3-452D-A016-CF30D56E2A0C}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{12133787-02E7-48D3-9561-5AABA6EF35C5}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CS_ConsoleLabirint</RootNamespace>
-    <AssemblyName>CS_ConsoleLabirint</AssemblyName>
+    <RootNamespace>LabirintModel</RootNamespace>
+    <AssemblyName>LabirintModel</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,18 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleVisualiser.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="ButtonEventArgs.cs" />
+    <Compile Include="Enums\KeyboardGameControls.cs" />
+    <Compile Include="Interfaces\ILabyrinthView.cs" />
+    <Compile Include="Labirint.cs" />
+    <Compile Include="Enums\LabirintElements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LabirintModel\LabirintModel.csproj">
-      <Project>{12133787-02e7-48d3-9561-5aaba6ef35c5}</Project>
-      <Name>LabirintModel</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

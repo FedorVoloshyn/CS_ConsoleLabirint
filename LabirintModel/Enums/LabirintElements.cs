@@ -1,6 +1,6 @@
-﻿namespace CS_ConsoleLabirint.Enums
+﻿namespace LabyrinthModel.Enums
 {
-    enum LabirintElements
+    public enum LabirintElements
     {
         Wall,
         Pass,

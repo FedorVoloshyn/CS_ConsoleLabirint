@@ -1,9 +1,9 @@
 ﻿using System;
-using CS_ConsoleLabirint.Enums;
+using LabyrinthModel.Enums;
 
-namespace CS_ConsoleLabirint
+namespace LabyrinthModel
 {
-    class Labirint
+    public class Labyrinth
     {
         private LabirintElements[,] labirint;
         private int heroPositionX;
@@ -11,12 +11,24 @@ namespace CS_ConsoleLabirint
         private int height;
         private int width;
 
-        public int Height { get { return height; } }
-        public int Width { get { return width; } }
-        public LabirintElements[,] LabirintMatrix { get { return labirint; } }
+        public int Height
+        {
+            get { return height; }
+        }
+
+        public int Width
+        {
+            get { return width; }
+        }
+
+        public LabirintElements[,] LabirintMatrix
+        {
+            get { return labirint; }
+        }
+
         public bool IsLevelDone { get; set; }
 
-        public Labirint(int height, int width)
+        public Labyrinth(int height, int width)
         {
             this.heroPositionX = 1;
             this.heroPositionY = 1;
@@ -27,10 +39,55 @@ namespace CS_ConsoleLabirint
 
             // Initialize labirint with only walls
             for (int i = 0; i < height; i++)
-                for (int j = 0; j < width; j++)
-                    labirint[i, j] = LabirintElements.Wall;
+            for (int j = 0; j < width; j++)
+                labirint[i, j] = LabirintElements.Wall;
 
             GenerateLabirint();
+        }
+
+        public void MakeStep(KeyboardGameControls heroDirection)
+        {
+            switch (heroDirection)
+            {
+                case KeyboardGameControls.Up:
+                    if (labirint[heroPositionX - 1, heroPositionY] != LabirintElements.Wall)
+                    {
+                        if (labirint[heroPositionX - 1, heroPositionY] == LabirintElements.Exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroPositionX - 1, heroPositionY], ref labirint[heroPositionX, heroPositionY]);
+                        heroPositionX--;
+                    }
+                    break;
+                case KeyboardGameControls.Right:
+                    if (labirint[heroPositionX, heroPositionY + 1] != LabirintElements.Wall)
+                    {
+                        if (labirint[heroPositionX, heroPositionY + 1] == LabirintElements.Exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroPositionX, heroPositionY + 1], ref labirint[heroPositionX, heroPositionY]);
+                        heroPositionY++;
+                    }
+                    break;
+                case KeyboardGameControls.Down:
+                    if (labirint[heroPositionX + 1, heroPositionY] != LabirintElements.Wall)
+                    {
+                        if (labirint[heroPositionX + 1, heroPositionY] == LabirintElements.Exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroPositionX + 1, heroPositionY], ref labirint[heroPositionX, heroPositionY]);
+                        heroPositionX++;
+                    }
+                    break;
+                case KeyboardGameControls.Left:
+                    if (labirint[heroPositionX, heroPositionY - 1] != LabirintElements.Wall)
+                    {
+                        if (labirint[heroPositionX, heroPositionY - 1] == LabirintElements.Exit)
+                            IsLevelDone = true;
+                        Swap(ref labirint[heroPositionX, heroPositionY - 1], ref labirint[heroPositionX, heroPositionY]);
+                        heroPositionY--;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private bool IsDeadend(int x, int y) // Additional function that determinates deadends
@@ -68,51 +125,6 @@ namespace CS_ConsoleLabirint
             return a == 4;
         }
 
-        public void MakeStep(Direction heroDirection)
-        {
-            switch (heroDirection)
-            {
-                case Direction.up:
-                    if (labirint[heroPositionX - 1, heroPositionY] != LabirintElements.Wall)
-                    {
-                        if (labirint[heroPositionX - 1, heroPositionY] == LabirintElements.Exit)
-                            IsLevelDone = true;
-                        Swap(ref labirint[heroPositionX - 1, heroPositionY], ref labirint[heroPositionX, heroPositionY]);
-                        heroPositionX--;
-                    }
-                    break;
-                case Direction.right:
-                    if (labirint[heroPositionX, heroPositionY + 1] != LabirintElements.Wall)
-                    {
-                        if (labirint[heroPositionX, heroPositionY + 1] == LabirintElements.Exit)
-                            IsLevelDone = true;
-                        Swap(ref labirint[heroPositionX, heroPositionY + 1], ref labirint[heroPositionX, heroPositionY]);
-                        heroPositionY++;
-                    }
-                    break;
-                case Direction.down:
-                    if (labirint[heroPositionX + 1, heroPositionY] != LabirintElements.Wall)
-                    {
-                        if (labirint[heroPositionX + 1, heroPositionY] == LabirintElements.Exit)
-                            IsLevelDone = true;
-                        Swap(ref labirint[heroPositionX + 1, heroPositionY], ref labirint[heroPositionX, heroPositionY]);
-                        heroPositionX++;
-                    }
-                    break;
-                case Direction.left:
-                    if (labirint[heroPositionX, heroPositionY - 1] != LabirintElements.Wall)
-                    {
-                        if (labirint[heroPositionX, heroPositionY - 1] == LabirintElements.Exit)
-                            IsLevelDone = true;
-                        Swap(ref labirint[heroPositionX, heroPositionY - 1], ref labirint[heroPositionX, heroPositionY]);
-                        heroPositionY--;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
         private void Swap(ref LabirintElements firstValue, ref LabirintElements secondValue)
         {
             LabirintElements temp = firstValue;
@@ -126,22 +138,22 @@ namespace CS_ConsoleLabirint
             Random rand = new Random();
 
             x = 3;
-            y = 3; 
-            a = 0; 
+            y = 3;
+            a = 0;
 
             while (a < 10000)
-            { 
+            {
                 labirint[y, x] = LabirintElements.Pass;
                 a++;
                 while (true)
-                { 
-                    c = rand.Next() % 4; 
+                {
+                    c = rand.Next() % 4;
                     switch (c)
-                    {  
+                    {
                         case 0:
                             if (y != 1)
                                 if (labirint[y - 2, x] == LabirintElements.Wall)
-                                { 
+                                {
                                     labirint[y - 1, x] = LabirintElements.Pass;
                                     labirint[y - 2, x] = LabirintElements.Pass;
                                     y -= 2;
@@ -150,7 +162,7 @@ namespace CS_ConsoleLabirint
                         case 1:
                             if (y != height - 2)
                                 if (labirint[y + 2, x] == LabirintElements.Wall)
-                                { 
+                                {
                                     labirint[y + 1, x] = LabirintElements.Pass;
                                     labirint[y + 2, x] = LabirintElements.Pass;
                                     y += 2;
@@ -159,7 +171,7 @@ namespace CS_ConsoleLabirint
                         case 2:
                             if (x != 1)
                                 if (labirint[y, x - 2] == LabirintElements.Wall)
-                                { 
+                                {
                                     labirint[y, x - 1] = LabirintElements.Pass;
                                     labirint[y, x - 2] = LabirintElements.Pass;
                                     x -= 2;
@@ -179,13 +191,12 @@ namespace CS_ConsoleLabirint
                         break;
                 }
 
-                if (IsDeadend(x, y)) 
+                if (IsDeadend(x, y))
                     do
                     {
                         x = 2 * (rand.Next() % ((width - 1) / 2)) + 1;
                         y = 2 * (rand.Next() % ((height - 1) / 2)) + 1;
-                    }
-                    while (labirint[y, x] != LabirintElements.Pass);
+                    } while (labirint[y, x] != LabirintElements.Pass);
 
 
             }
